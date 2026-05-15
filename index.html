@@ -24,6 +24,8 @@
             max-width: 600px;
             width: 90%;
             border-top: 4px solid #007acc;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         h1 {
@@ -72,15 +74,14 @@
             border-color: #007acc;
         }
 
-        /* Clases dinámicas para respuestas */
         .correct {
-            background-color: #2e7d32 !important; /* Verde */
+            background-color: #2e7d32 !important;
             color: white !important;
             border-color: #4caf50 !important;
         }
 
         .wrong {
-            background-color: #c62828 !important; /* Rojo */
+            background-color: #c62828 !important;
             color: white !important;
             border-color: #f44336 !important;
         }
@@ -90,6 +91,7 @@
             font-size: 14px;
             min-height: 40px;
             color: #a8e6cf;
+            line-height: 1.5;
         }
 
         #next-btn {
@@ -103,7 +105,7 @@
             font-weight: bold;
             width: 100%;
             margin-top: 15px;
-            display: none; /* Se oculta hasta que responda */
+            display: none;
         }
 
         #next-btn:hover {
@@ -116,7 +118,7 @@
     <div class="quiz-container">
         <h1>Entrenador Normativa RIC</h1>
         <div class="score-board">
-            Pregunta <span id="current-question-text">1</span> de <span id="total-questions-text">5</span> | Puntaje: <span id="score-text">0</span>
+            Pregunta <span id="current-question-text">1</span> de <span id="total-questions-text">15</span> | Puntaje: <span id="score-text">0</span>
         </div>
 
         <div id="quiz-area">
@@ -129,21 +131,20 @@
     </div>
 
     <script>
-        // Aquí agregas todas tus preguntas de la RIC
         const preguntas = [
             {
-                pregunta: "¿Cuál es la sección mínima obligatoria para un circuito de enchufes de uso general según el RIC N°04?",
+                pregunta: "¿Cuál es la sección mínima obligatoria para un circuito de enchufes de uso general?",
                 opciones: [
                     "A) 1,5 mm²",
                     "B) 2,5 mm²",
                     "C) 4,0 mm²",
                     "D) 6,0 mm²"
                 ],
-                respuestaCorrecta: 1, // El índice del array (La B es la posición 1)
-                explicacion: "Correcto. El RIC 04 exige un mínimo de 2,5 mm² para circuitos de enchufes."
+                respuestaCorrecta: 1, 
+                explicacion: "El RIC N°04, sección 6.2.2.1, exige una sección mínima de 2,5 mm² para circuitos de enchufes de uso general."
             },
             {
-                pregunta: "Según el RIC N°06, ¿Cuál es la sensibilidad máxima que debe tener un protector diferencial para proteger a las personas?",
+                pregunta: "¿Cuál es la sensibilidad máxima obligatoria de un protector diferencial para proteger la vida de las personas?",
                 opciones: [
                     "A) 10 mA",
                     "B) 30 mA",
@@ -151,21 +152,21 @@
                     "D) 300 mA"
                 ],
                 respuestaCorrecta: 1,
-                explicacion: "Exacto. Para protección de personas contra contactos directos, la sensibilidad no debe superar los 30 mA."
+                explicacion: "El RIC N°06, sección 5.1.1, establece que para protección contra contactos directos, la sensibilidad no debe superar los 30 mA."
             },
             {
-                pregunta: "¿Cuál es la cantidad máxima de centros (puntos) que puede tener un circuito de uso general según el RIC N°10?",
+                pregunta: "¿Cuál es la cantidad máxima de centros (puntos) que puede tener un circuito de uso general?",
                 opciones: [
                     "A) 10 centros",
                     "B) 15 centros",
                     "C) 20 centros",
-                    "D) No hay límite, depende del automático"
+                    "D) No hay límite"
                 ],
                 respuestaCorrecta: 1,
-                explicacion: "Correcto. Un circuito no debe exceder los 15 centros o los 2.000 VA, lo que ocurra primero."
+                explicacion: "Según el RIC N°10, un circuito no debe exceder los 15 centros o una potencia total de 2.000 VA, lo que ocurra primero."
             },
             {
-                pregunta: "Si el cable de Fase 1 es Azul y el Neutro es Blanco, ¿De qué color debe ser obligatoriamente el conductor de Tierra de Protección (PE)?",
+                pregunta: "Si la Fase 1 es Azul y el Neutro es Blanco, ¿de qué color debe ser obligatoriamente el conductor de Tierra de Protección (PE)?",
                 opciones: [
                     "A) Rojo",
                     "B) Negro",
@@ -173,10 +174,10 @@
                     "D) Desnudo sin aislación"
                 ],
                 respuestaCorrecta: 2,
-                explicacion: "Perfecto. El RIC 04 establece que la tierra de protección debe ser verde o de doble coloración verde y amarillo."
+                explicacion: "El RIC N°04, sección 5.2.2, dicta el código de colores: la tierra de protección debe ser verde o de coloración verde con amarillo."
             },
             {
-                pregunta: "En un alimentador, ¿Cuál es el porcentaje máximo permitido de caída de tensión según el RIC N°03?",
+                pregunta: "En un alimentador, ¿cuál es el porcentaje máximo permitido de caída de tensión?",
                 opciones: [
                     "A) 2%",
                     "B) 3%",
@@ -184,7 +185,117 @@
                     "D) 10%"
                 ],
                 respuestaCorrecta: 1,
-                explicacion: "Bien hecho. El alimentador no puede superar el 3% de caída de tensión (y un 5% total hasta el circuito final)."
+                explicacion: "El RIC N°03, sección 5.1.2, indica que la caída de tensión en el alimentador no debe exceder del 3% (y 5% máximo hasta el último centro del circuito final)."
+            },
+            {
+                pregunta: "¿Qué porcentaje de espacio libre (reserva) debe tener un tablero eléctrico para futuras ampliaciones?",
+                opciones: [
+                    "A) 10%",
+                    "B) 15%",
+                    "C) 25%",
+                    "D) 40%"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "El RIC N°02, sección 6.2.2, exige que todo tablero deba contar con un volumen libre de al menos un 25% para permitir futuras modificaciones."
+            },
+            {
+                pregunta: "¿Cuál es el tiempo de autonomía mínima que debe garantizar un sistema de iluminación de emergencia?",
+                opciones: [
+                    "A) 30 minutos",
+                    "B) 60 minutos",
+                    "C) 90 minutos",
+                    "D) 120 minutos"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "El RIC N°08, sección 5.1.4, establece que las luces de emergencia deben tener una autonomía mínima de 90 minutos."
+            },
+            {
+                pregunta: "¿Cuál es el voltaje máximo considerado como \"Tensión de Seguridad\" en lugares secos?",
+                opciones: [
+                    "A) 12 V",
+                    "B) 24 V",
+                    "C) 50 V",
+                    "D) 110 V"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "El RIC N°05 considera como voltaje de seguridad un máximo de 50 V en corriente alterna para lugares secos (y 24 V para lugares húmedos)."
+            },
+            {
+                pregunta: "¿Cuál es la capacidad de ruptura (Cortocircuito) mínima que debe tener un disyuntor en una instalación domiciliaria (empalme residencial)?",
+                opciones: [
+                    "A) 3 kA",
+                    "B) 4,5 kA",
+                    "C) 6 kA",
+                    "D) 10 kA"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "Según el RIC N°06, para instalaciones residenciales estándar, el poder de corte o capacidad de ruptura mínima de las protecciones debe ser de 6 kA."
+            },
+            {
+                pregunta: "¿De qué color debe ser obligatoriamente el conductor Neutro en una instalación?",
+                opciones: [
+                    "A) Negro",
+                    "B) Blanco",
+                    "C) Azul",
+                    "D) Rojo"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "El RIC N°04, sección 5.2.2, es estricto con el código de colores: el Neutro siempre debe ser Blanco."
+            },
+            {
+                pregunta: "En un lugar de reunión de personas (ej: un CESFAM), ¿qué característica especial deben tener los cables instalados?",
+                opciones: [
+                    "A) Ser blindados con malla metálica",
+                    "B) Ser de sección mínima 4,0 mm²",
+                    "C) Ser libres de halógenos y de baja toxicidad (ej: RZ1-K)",
+                    "D) Ser de aluminio en vez de cobre"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "El RIC N°07 obliga el uso de conductores libres de halógenos (baja emisión de humos y gases tóxicos) en recintos con alta concentración de personas."
+            },
+            {
+                pregunta: "¿Cuál es el valor mínimo aceptable al medir la Resistencia de Aislación en una instalación nueva de 220V?",
+                opciones: [
+                    "A) 0,5 Megaohms",
+                    "B) 1 Megaohm (1 MΩ)",
+                    "C) 10 Megaohms",
+                    "D) 100 Ohms"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "El RIC N°19, sobre puesta en servicio, exige que la resistencia de aislación no sea menor a 1 MΩ medida con un instrumento de 500V."
+            },
+            {
+                pregunta: "¿Dónde debe instalarse obligatoriamente la caja de empalme según la normativa?",
+                opciones: [
+                    "A) En el tablero general dentro de la casa",
+                    "B) En el poste de la compañía eléctrica",
+                    "C) En la fachada exterior o límite de la propiedad, accesible desde la vía pública",
+                    "D) En el entretecho de la vivienda"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "El RIC N°01 señala que los empalmes deben ubicarse de forma que la compañía distribuidora pueda acceder a su lectura desde la vía pública."
+            },
+            {
+                pregunta: "¿Cuál es la altura reglamentaria para instalar los dispositivos de maniobra en un tablero eléctrico?",
+                opciones: [
+                    "A) Entre 1,0 m y 1,5 m",
+                    "B) Entre 0,45 m y 2,0 m",
+                    "C) A más de 2,5 m fuera del alcance",
+                    "D) A nivel del suelo (zócalo)"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "El RIC N°02, sección 6.1.1, establece que los dispositivos deben estar instalados a una altura comprendida entre 0,45 metros y 2,0 metros respecto del nivel del piso."
+            },
+            {
+                pregunta: "Respecto a los circuitos de alumbrado y enchufes, la norma establece que:",
+                opciones: [
+                    "A) Deben estar siempre en el mismo ducto",
+                    "B) Se pueden mezclar en un solo automático de 25A",
+                    "C) Deben ser circuitos independientes y separados",
+                    "D) Los enchufes no necesitan tierra si son para alumbrado"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "El RIC N°10 establece la separación de cargas: los circuitos de alumbrado deben ser independientes de los circuitos de enchufes, con sus respectivas protecciones separadas."
             }
         ];
 
@@ -192,21 +303,17 @@
         let puntaje = 0;
 
         function cargarPregunta() {
-            // Resetear la interfaz
             document.getElementById("feedback-text").innerText = "";
             document.getElementById("next-btn").style.display = "none";
             const contenedorOpciones = document.getElementById("options-container");
             contenedorOpciones.innerHTML = "";
 
-            // Actualizar contadores
             document.getElementById("current-question-text").innerText = preguntaActual + 1;
             document.getElementById("total-questions-text").innerText = preguntas.length;
 
-            // Cargar textos
             const pregunta = preguntas[preguntaActual];
             document.getElementById("question-text").innerText = pregunta.pregunta;
 
-            // Generar botones
             pregunta.opciones.forEach((opcion, index) => {
                 const boton = document.createElement("button");
                 boton.innerText = opcion;
@@ -220,24 +327,21 @@
             const pregunta = preguntas[preguntaActual];
             const botones = document.querySelectorAll(".option-btn");
 
-            // Desactivar todos los botones para que no haga clic dos veces
             botones.forEach(btn => btn.style.pointerEvents = 'none');
 
             if (indiceSeleccionado === pregunta.respuestaCorrecta) {
                 botonSeleccionado.classList.add("correct");
                 puntaje += 10;
                 document.getElementById("score-text").innerText = puntaje;
-                document.getElementById("feedback-text").innerText = pregunta.explicacion;
-                document.getElementById("feedback-text").style.color = "#a8e6cf"; // Verde
+                document.getElementById("feedback-text").innerText = "¡Correcto! " + pregunta.explicacion;
+                document.getElementById("feedback-text").style.color = "#a8e6cf"; 
             } else {
                 botonSeleccionado.classList.add("wrong");
-                // Mostrar cuál era la correcta
                 botones[pregunta.respuestaCorrecta].classList.add("correct");
                 document.getElementById("feedback-text").innerText = "Incorrecto. " + pregunta.explicacion;
-                document.getElementById("feedback-text").style.color = "#f44336"; // Rojo
+                document.getElementById("feedback-text").style.color = "#f44336"; 
             }
 
-            // Mostrar el botón para avanzar
             document.getElementById("next-btn").style.display = "block";
         }
 
@@ -246,16 +350,14 @@
             if (preguntaActual < preguntas.length) {
                 cargarPregunta();
             } else {
-                // Final del Quiz
                 document.getElementById("quiz-area").innerHTML = `
                     <h2 style="text-align:center; color:white;">¡Test Completado!</h2>
-                    <p style="text-align:center; font-size:18px;">Tu puntaje final es: <strong>${puntaje}</strong> puntos.</p>
-                    <button id="next-btn" style="display:block;" onclick="location.reload()">Reintentar</button>
+                    <p style="text-align:center; font-size:18px;">Tu puntaje final es: <strong>${puntaje}</strong> de ${preguntas.length * 10} puntos.</p>
+                    <button id="next-btn" style="display:block; margin-top: 30px;" onclick="location.reload()">Volver a intentar</button>
                 `;
             }
         }
 
-        // Iniciar el quiz al cargar la página
         cargarPregunta();
     </script>
 
