@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenador RIC 1-19 | Chile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #cccccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background-color: #252526;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            max-width: 600px;
+            width: 90%;
+            border-top: 4px solid #007acc;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .score-board {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #3e3e42;
+            padding-bottom: 10px;
+        }
+
+        .question {
+            font-size: 18px;
+            color: #ffffff;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: #333333;
+            color: #cccccc;
+            border: 1px solid #3e3e42;
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background-color: #3e3e42;
+            border-color: #007acc;
+        }
+
+        /* Clases dinámicas para respuestas */
+        .correct {
+            background-color: #2e7d32 !important; /* Verde */
+            color: white !important;
+            border-color: #4caf50 !important;
+        }
+
+        .wrong {
+            background-color: #c62828 !important; /* Rojo */
+            color: white !important;
+            border-color: #f44336 !important;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            font-size: 14px;
+            min-height: 40px;
+            color: #a8e6cf;
+        }
+
+        #next-btn {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 15px;
+            display: none; /* Se oculta hasta que responda */
+        }
+
+        #next-btn:hover {
+            background-color: #005f9e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Entrenador Normativa RIC</h1>
+        <div class="score-board">
+            Pregunta <span id="current-question-text">1</span> de <span id="total-questions-text">5</span> | Puntaje: <span id="score-text">0</span>
+        </div>
+
+        <div id="quiz-area">
+            <div class="question" id="question-text">Cargando pregunta...</div>
+            <div class="options" id="options-container">
+                </div>
+            <div class="feedback" id="feedback-text"></div>
+            <button id="next-btn" onclick="siguientePregunta()">Siguiente Pregunta</button>
+        </div>
+    </div>
+
+    <script>
+        // Aquí agregas todas tus preguntas de la RIC
+        const preguntas = [
+            {
+                pregunta: "¿Cuál es la sección mínima obligatoria para un circuito de enchufes de uso general según el RIC N°04?",
+                opciones: [
+                    "A) 1,5 mm²",
+                    "B) 2,5 mm²",
+                    "C) 4,0 mm²",
+                    "D) 6,0 mm²"
+                ],
+                respuestaCorrecta: 1, // El índice del array (La B es la posición 1)
+                explicacion: "Correcto. El RIC 04 exige un mínimo de 2,5 mm² para circuitos de enchufes."
+            },
+            {
+                pregunta: "Según el RIC N°06, ¿Cuál es la sensibilidad máxima que debe tener un protector diferencial para proteger a las personas?",
+                opciones: [
+                    "A) 10 mA",
+                    "B) 30 mA",
+                    "C) 100 mA",
+                    "D) 300 mA"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "Exacto. Para protección de personas contra contactos directos, la sensibilidad no debe superar los 30 mA."
+            },
+            {
+                pregunta: "¿Cuál es la cantidad máxima de centros (puntos) que puede tener un circuito de uso general según el RIC N°10?",
+                opciones: [
+                    "A) 10 centros",
+                    "B) 15 centros",
+                    "C) 20 centros",
+                    "D) No hay límite, depende del automático"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "Correcto. Un circuito no debe exceder los 15 centros o los 2.000 VA, lo que ocurra primero."
+            },
+            {
+                pregunta: "Si el cable de Fase 1 es Azul y el Neutro es Blanco, ¿De qué color debe ser obligatoriamente el conductor de Tierra de Protección (PE)?",
+                opciones: [
+                    "A) Rojo",
+                    "B) Negro",
+                    "C) Verde o Verde/Amarillo",
+                    "D) Desnudo sin aislación"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "Perfecto. El RIC 04 establece que la tierra de protección debe ser verde o de doble coloración verde y amarillo."
+            },
+            {
+                pregunta: "En un alimentador, ¿Cuál es el porcentaje máximo permitido de caída de tensión según el RIC N°03?",
+                opciones: [
+                    "A) 2%",
+                    "B) 3%",
+                    "C) 5%",
+                    "D) 10%"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "Bien hecho. El alimentador no puede superar el 3% de caída de tensión (y un 5% total hasta el circuito final)."
+            }
+        ];
+
+        let preguntaActual = 0;
+        let puntaje = 0;
+
+        function cargarPregunta() {
+            // Resetear la interfaz
+            document.getElementById("feedback-text").innerText = "";
+            document.getElementById("next-btn").style.display = "none";
+            const contenedorOpciones = document.getElementById("options-container");
+            contenedorOpciones.innerHTML = "";
+
+            // Actualizar contadores
+            document.getElementById("current-question-text").innerText = preguntaActual + 1;
+            document.getElementById("total-questions-text").innerText = preguntas.length;
+
+            // Cargar textos
+            const pregunta = preguntas[preguntaActual];
+            document.getElementById("question-text").innerText = pregunta.pregunta;
+
+            // Generar botones
+            pregunta.opciones.forEach((opcion, index) => {
+                const boton = document.createElement("button");
+                boton.innerText = opcion;
+                boton.classList.add("option-btn");
+                boton.onclick = () => verificarRespuesta(index, boton);
+                contenedorOpciones.appendChild(boton);
+            });
+        }
+
+        function verificarRespuesta(indiceSeleccionado, botonSeleccionado) {
+            const pregunta = preguntas[preguntaActual];
+            const botones = document.querySelectorAll(".option-btn");
+
+            // Desactivar todos los botones para que no haga clic dos veces
+            botones.forEach(btn => btn.style.pointerEvents = 'none');
+
+            if (indiceSeleccionado === pregunta.respuestaCorrecta) {
+                botonSeleccionado.classList.add("correct");
+                puntaje += 10;
+                document.getElementById("score-text").innerText = puntaje;
+                document.getElementById("feedback-text").innerText = pregunta.explicacion;
+                document.getElementById("feedback-text").style.color = "#a8e6cf"; // Verde
+            } else {
+                botonSeleccionado.classList.add("wrong");
+                // Mostrar cuál era la correcta
+                botones[pregunta.respuestaCorrecta].classList.add("correct");
+                document.getElementById("feedback-text").innerText = "Incorrecto. " + pregunta.explicacion;
+                document.getElementById("feedback-text").style.color = "#f44336"; // Rojo
+            }
+
+            // Mostrar el botón para avanzar
+            document.getElementById("next-btn").style.display = "block";
+        }
+
+        function siguientePregunta() {
+            preguntaActual++;
+            if (preguntaActual < preguntas.length) {
+                cargarPregunta();
+            } else {
+                // Final del Quiz
+                document.getElementById("quiz-area").innerHTML = `
+                    <h2 style="text-align:center; color:white;">¡Test Completado!</h2>
+                    <p style="text-align:center; font-size:18px;">Tu puntaje final es: <strong>${puntaje}</strong> puntos.</p>
+                    <button id="next-btn" style="display:block;" onclick="location.reload()">Reintentar</button>
+                `;
+            }
+        }
+
+        // Iniciar el quiz al cargar la página
+        cargarPregunta();
+    </script>
+
+</body>
+</html>
