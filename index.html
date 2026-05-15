@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrenador Eléctrico | Chile</title>
-
     <script src="preguntas.js"></script>
-
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e1e; color: #cccccc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
         .app-container { background-color: #252526; padding: 30px; border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.5); max-width: 600px; width: 90%; border-top: 4px solid #007acc; max-height: 90vh; overflow-y: auto; }
@@ -14,292 +12,199 @@
         h2 { color: #a8e6cf; font-size: 18px; text-align: center; margin-bottom: 20px; }
         .screen { display: none; }
         .screen.active { display: block; }
-        
         .menu-btn { background-color: #333333; color: #ffffff; border: 1px solid #3e3e42; padding: 15px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; margin-bottom: 15px; transition: 0.2s; font-weight: bold; }
         .menu-btn:hover { background-color: #007acc; border-color: #005f9e; transform: translateX(5px); }
         .btn-disabled { background-color: #1e1e1e; color: #666; cursor: not-allowed; border-style: dashed; }
-        .btn-disabled:hover { background-color: #1e1e1e; border-color: #3e3e42; transform: none; }
         .btn-back { background-color: transparent; color: #888; border: 1px solid #888; margin-top: 10px; }
-        .btn-back:hover { background-color: #333; color: white; transform: none;}
-
+        .btn-back:hover { background-color: #333; color: white; }
         .ric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .ric-checkbox { display: flex; align-items: center; background: #333; padding: 8px; border-radius: 4px; border: 1px solid #444; cursor: pointer; font-size: 14px; transition: 0.2s; user-select: none; }
-        .ric-checkbox:hover { border-color: #007acc; }
-        .ric-checkbox input { margin-right: 8px; cursor: pointer; }
-        
+        .ric-checkbox { display: flex; align-items: center; background: #333; padding: 8px; border-radius: 4px; border: 1px solid #444; cursor: pointer; font-size: 14px; user-select: none; }
+        .ric-checkbox input { margin-right: 8px; }
         .input-group { margin-bottom: 20px; text-align: center; background: #333; padding: 15px; border-radius: 6px; border: 1px solid #444;}
         .input-group input { padding: 10px; border-radius: 4px; border: 1px solid #007acc; background: #1e1e1e; color: white; width: 80px; text-align: center; font-size: 18px; font-weight: bold; }
         #max-qty-label { display: block; margin-top: 5px; font-size: 13px; color: #a8e6cf; }
-
         .score-board { text-align: center; font-size: 14px; color: #888; margin-bottom: 25px; border-bottom: 1px solid #3e3e42; padding-bottom: 10px; }
         .question { font-size: 18px; color: #ffffff; margin-bottom: 20px; line-height: 1.4; }
         .options { display: flex; flex-direction: column; gap: 12px; }
-        .option-btn { background-color: #333333; color: #cccccc; border: 1px solid #3e3e42; padding: 15px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 16px; transition: all 0.2s ease; }
-        .option-btn:hover { background-color: #3e3e42; border-color: #007acc; }
-        .correct { background-color: #2e7d32 !important; color: white !important; border-color: #4caf50 !important; }
-        .wrong { background-color: #c62828 !important; color: white !important; border-color: #f44336 !important; }
-        .feedback { margin-top: 20px; font-size: 14px; min-height: 40px; color: #a8e6cf; line-height: 1.5; }
+        .option-btn { background-color: #333333; color: #cccccc; border: 1px solid #3e3e42; padding: 15px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 16px; }
+        .correct { background-color: #2e7d32 !important; color: white !important; }
+        .wrong { background-color: #c62828 !important; color: white !important; }
+        .feedback { margin-top: 20px; font-size: 14px; min-height: 40px; color: #a8e6cf; }
         #next-btn { background-color: #007acc; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 15px; display: none; }
-        #next-btn:hover { background-color: #005f9e; }
     </style>
 </head>
 <body>
-
     <div class="app-container">
-        
         <div id="screen-main" class="screen active">
             <h1>Entrenador Eléctrico</h1>
             <h2>Selecciona tu área de estudio</h2>
+            <button class="menu-btn" onclick="showScreen('screen-intro')">⚡ Introducción a la Electricidad</button>
             <button class="menu-btn" onclick="showScreen('screen-ric')">📚 Estudiar Normativa RIC (1 al 19)</button>
-            <button class="menu-btn btn-disabled" onclick="alert('Módulo en construcción.')">📐 Estudiar Cálculos Matemáticos (Pronto)</button>
+            <button class="menu-btn btn-disabled" onclick="alert('Pronto módulo de cálculos.')">📐 Estudiar Cálculos Matemáticos (Pronto)</button>
+        </div>
+
+        <div id="screen-intro" class="screen">
+            <h1>Introducción</h1>
+            <h2>Selecciona la longitud del test</h2>
+            <button class="menu-btn" onclick="iniciarTestIntro(10)">⏱️ Test Corto (10 Preguntas)</button>
+            <button class="menu-btn" onclick="iniciarTestIntro(20)">📝 Test Intermedio (20 Preguntas)</button>
+            <button class="menu-btn btn-back" onclick="showScreen('screen-main')">← Volver al inicio</button>
         </div>
 
         <div id="screen-ric" class="screen">
             <h1>Normativa RIC</h1>
             <h2>Selecciona la longitud del test</h2>
-            <button class="menu-btn" onclick="iniciarTestAleatorio(10)">⏱️ Test Corto (10 Preguntas)</button>
-            <button class="menu-btn" onclick="iniciarTestAleatorio(20)">📝 Test Intermedio (20 Preguntas)</button>
-            <button class="menu-btn" onclick="iniciarTestAleatorio(30)">🔥 Test Largo (30 Preguntas)</button>
+            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(10)">⏱️ Test Corto (10 Preguntas)</button>
+            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(20)">📝 Test Intermedio (20 Preguntas)</button>
+            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(30)">🔥 Test Largo (30 Preguntas)</button>
             <button class="menu-btn" onclick="showScreen('screen-custom')">⚙️ Test Personalizado (Elegir Pliegos)</button>
             <button class="menu-btn btn-back" onclick="showScreen('screen-main')">← Volver al inicio</button>
         </div>
 
         <div id="screen-custom" class="screen">
             <h1>Test Personalizado</h1>
-            <p style="font-size: 14px; color: #888; text-align: center; margin-bottom: 20px;">1. Marca los pliegos que deseas estudiar:</p>
-            
-            <div class="ric-grid" id="ric-checkboxes">
-                </div>
-
+            <div class="ric-grid" id="ric-checkboxes"></div>
             <div class="input-group">
-                <label style="display:block; margin-bottom:8px; color: #ccc;">2. ¿Cuántas preguntas quieres responder?</label>
+                <label style="display:block; margin-bottom:8px;">¿Cuántas preguntas quieres?</label>
                 <input type="number" id="custom-qty" value="0" min="1" disabled>
-                <span id="max-qty-label">Selecciona pliegos para ver el máximo</span>
+                <span id="max-qty-label">Selecciona pliegos</span>
             </div>
-
-            <button class="menu-btn" id="btn-iniciar-custom" style="background-color: #2e7d32; border-color: #4caf50;" onclick="iniciarTestPersonalizado()" disabled>🚀 Iniciar Test Personalizado</button>
-            <button class="menu-btn btn-back" onclick="showScreen('screen-ric')">← Volver atrás</button>
+            <button class="menu-btn" id="btn-iniciar-custom" onclick="iniciarTestPersonalizado()" disabled>🚀 Iniciar</button>
+            <button class="menu-btn btn-back" onclick="showScreen('screen-ric')">← Volver</button>
         </div>
 
         <div id="screen-quiz" class="screen">
-            <h1 id="quiz-title">Entrenador RIC</h1>
-            
+            <h1 id="quiz-title">Quiz</h1>
             <div id="quiz-content">
-                <div class="score-board">
-                    Pregunta <span id="current-question-text">1</span> de <span id="total-questions-text">X</span> | Puntaje: <span id="score-text">0</span>
-                </div>
-                <div class="question" id="question-text">Cargando pregunta...</div>
+                <div class="score-board">Pregunta <span id="current-question-text">1</span> de <span id="total-questions-text">X</span> | Puntaje: <span id="score-text">0</span></div>
+                <div class="question" id="question-text"></div>
                 <div class="options" id="options-container"></div>
                 <div class="feedback" id="feedback-text"></div>
-                <button id="next-btn" onclick="siguientePregunta()">Siguiente Pregunta</button>
+                <button id="next-btn" onclick="siguientePregunta()">Siguiente</button>
             </div>
-
-            <div id="results-content" style="display: none;">
-                <h2 style="text-align:center; color:white; font-size: 24px;">¡Test Completado!</h2>
-                <p style="text-align:center; font-size:18px; margin-bottom: 30px;">
-                    Tu puntaje final es: <br><strong style="font-size: 36px; color: #a8e6cf;" id="final-score">0</strong><br> de <span id="max-score">0</span> puntos.
-                </p>
-                <button class="menu-btn" onclick="reintentarTest()">🔄 Reintentar mismo Test</button>
-                <button class="menu-btn btn-back" onclick="showScreen('screen-main')">🏠 Volver al Menú Principal</button>
+            <div id="results-content" style="display: none; text-align: center;">
+                <h2>¡Completado!</h2>
+                <p>Puntaje final: <br><strong style="font-size: 36px; color: #a8e6cf;" id="final-score">0</strong> de <span id="max-score">0</span></p>
+                <button class="menu-btn" onclick="reintentarTest()">🔄 Reintentar</button>
+                <button class="menu-btn btn-back" onclick="showScreen('screen-main')">🏠 Menú Principal</button>
             </div>
         </div>
-
     </div>
-
-    <script src="preguntas.js"></script>
 
     <script>
         let preguntasDelTest = [];
         let preguntaActual = 0;
         let puntaje = 0;
-        let lastConfig = {}; 
+        let lastConfig = {};
 
-        // Generar las casillas y activar los "Seguros" (Event Listeners)
         window.onload = () => {
             const grid = document.getElementById('ric-checkboxes');
             for(let i=1; i<=19; i++) {
                 grid.innerHTML += `<label class="ric-checkbox"><input type="checkbox" class="ric-cb" value="${i}"> RIC ${i}</label>`;
             }
-
-            // Cada vez que marcas/desmarcas un pliego, recalcula el máximo
-            document.querySelectorAll('.ric-cb').forEach(cb => {
-                cb.addEventListener('change', recalcularMaximoPreguntas);
-            });
-
-            // Cada vez que escribes en la caja, verifica que no te pases del máximo
-            const inputQty = document.getElementById('custom-qty');
-            inputQty.addEventListener('input', () => {
-                let max = parseInt(inputQty.max);
-                let val = parseInt(inputQty.value);
-                if (val > max) inputQty.value = max;
-                if (val < 1 && max > 0) inputQty.value = 1;
-            });
+            document.querySelectorAll('.ric-cb').forEach(cb => cb.addEventListener('change', recalcularMaximoPreguntas));
         };
 
-        // Función que limita matemáticamente la caja de texto
         function recalcularMaximoPreguntas() {
-            let seleccionados = [];
-            document.querySelectorAll('.ric-cb:checked').forEach(cb => seleccionados.push(parseInt(cb.value)));
-            
+            let seleccionados = Array.from(document.querySelectorAll('.ric-cb:checked')).map(cb => parseInt(cb.value));
             let inputQty = document.getElementById('custom-qty');
             let labelMax = document.getElementById('max-qty-label');
             let btnIniciar = document.getElementById('btn-iniciar-custom');
-
-            if (seleccionados.length === 0) {
-                inputQty.value = 0;
-                inputQty.max = 0;
-                inputQty.disabled = true;
-                btnIniciar.disabled = true;
-                btnIniciar.style.opacity = "0.5";
-                labelMax.innerText = "Selecciona pliegos para ver el máximo";
-                return;
-            }
-
-            // Busca cuántas preguntas existen en la base de datos para los pliegos marcados
             let cantidadDisponible = baseDePreguntas.filter(p => seleccionados.includes(p.pliego)).length;
 
-            inputQty.disabled = false;
+            inputQty.disabled = seleccionados.length === 0;
+            btnIniciar.disabled = cantidadDisponible === 0;
             inputQty.max = cantidadDisponible;
-            labelMax.innerText = `Máximo disponible en DB: ${cantidadDisponible} preguntas`;
-
-            // Habilitar o deshabilitar botón de inicio
-            if (cantidadDisponible > 0) {
-                btnIniciar.disabled = false;
-                btnIniciar.style.opacity = "1";
-                // Si la caja estaba en 0 o se pasó del nuevo límite, ajustarla
-                if(parseInt(inputQty.value) === 0 || parseInt(inputQty.value) > cantidadDisponible) {
-                    inputQty.value = cantidadDisponible > 10 ? 10 : cantidadDisponible; // Sugiere 10 por defecto si hay suficientes
-                }
-            } else {
-                inputQty.value = 0;
-                inputQty.disabled = true;
-                btnIniciar.disabled = true;
-                btnIniciar.style.opacity = "0.5";
-                labelMax.innerText = `Aún no has agregado preguntas del RIC marcado.`;
-            }
+            labelMax.innerText = `Máximo disponible: ${cantidadDisponible}`;
+            if(cantidadDisponible > 0 && inputQty.value == 0) inputQty.value = Math.min(10, cantidadDisponible);
         }
 
-        function showScreen(screenId) {
+        function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
 
-        function mezclarPreguntas(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex != 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
+        function mezclar(array) { return array.sort(() => Math.random() - 0.5); }
+
+        function iniciarTestAleatorioRIC(cant) {
+            let pool = baseDePreguntas.filter(p => typeof p.pliego === 'number');
+            prepararYArrancarTest(pool, cant, "Normativa RIC");
+            lastConfig = { tipo: 'ric', cantidad: cant };
         }
 
-        function iniciarTestAleatorio(cantidad) {
-            prepararYArrancarTest([...baseDePreguntas], cantidad, "Test Aleatorio");
-            lastConfig = { tipo: 'aleatorio', cantidad: cantidad };
+        function iniciarTestIntro(cant) {
+            let pool = baseDePreguntas.filter(p => p.pliego === 'intro');
+            prepararYArrancarTest(pool, cant, "Introducción");
+            lastConfig = { tipo: 'intro', cantidad: cant };
         }
 
         function iniciarTestPersonalizado() {
-            let seleccionados = [];
-            document.querySelectorAll('.ric-cb:checked').forEach(cb => seleccionados.push(parseInt(cb.value)));
-            let cantidadPedida = parseInt(document.getElementById('custom-qty').value);
-
-            let poolPreguntas = baseDePreguntas.filter(p => seleccionados.includes(p.pliego));
-
-            prepararYArrancarTest(poolPreguntas, cantidadPedida, `RICs: ${seleccionados.join(', ')}`);
-            lastConfig = { tipo: 'personalizado', cantidad: cantidadPedida, rics: seleccionados };
+            let seleccionados = Array.from(document.querySelectorAll('.ric-cb:checked')).map(cb => parseInt(cb.value));
+            let cant = parseInt(document.getElementById('custom-qty').value);
+            let pool = baseDePreguntas.filter(p => seleccionados.includes(p.pliego));
+            prepararYArrancarTest(pool, cant, "RIC Personalizado");
+            lastConfig = { tipo: 'custom', cantidad: cant, rics: seleccionados };
         }
 
-        function prepararYArrancarTest(poolDisponible, cantidad, titulo) {
+        function prepararYArrancarTest(pool, cant, titulo) {
             document.getElementById("results-content").style.display = "none";
             document.getElementById("quiz-content").style.display = "block";
-            document.getElementById("quiz-title").innerText = `Entrenador RIC | ${titulo}`;
-
-            let preguntasMezcladas = mezclarPreguntas([...poolDisponible]); 
+            document.getElementById("quiz-title").innerText = titulo;
             
-            preguntasDelTest = preguntasMezcladas.slice(0, cantidad).map(p => {
-                let opcionesLimpias = p.opciones.map(opt => opt.replace(/^[A-D]\)\s*/, ''));
-                let textoCorrecto = opcionesLimpias[p.respuestaCorrecta];
-                let opcionesRevueltas = mezclarPreguntas([...opcionesLimpias]);
-                let nuevoIndiceCorrecto = opcionesRevueltas.indexOf(textoCorrecto);
-                
-                return {
-                    pregunta: p.pregunta,
-                    opciones: opcionesRevueltas,
-                    respuestaCorrecta: nuevoIndiceCorrecto,
-                    explicacion: p.explicacion
-                };
+            preguntasDelTest = mezclar([...pool]).slice(0, cant).map(p => {
+                let opcionesLimpias = p.opciones.map(o => o.replace(/^[A-D]\)\s*/, ''));
+                let correctaText = opcionesLimpias[p.respuestaCorrecta];
+                let revueltas = mezclar([...opcionesLimpias]);
+                return { pregunta: p.pregunta, opciones: revueltas, respuestaCorrecta: revueltas.indexOf(correctaText), explicacion: p.explicacion };
             });
-            
-            preguntaActual = 0;
-            puntaje = 0;
-            document.getElementById("total-questions-text").innerText = preguntasDelTest.length; // Ajuste por si pide más de las que hay
-            document.getElementById("score-text").innerText = "0";
 
-            showScreen('screen-quiz');
-            cargarPregunta();
-        }
-
-        function reintentarTest() {
-            if(lastConfig.tipo === 'aleatorio') {
-                iniciarTestAleatorio(lastConfig.cantidad);
-            } else {
-                iniciarTestPersonalizado(); 
-            }
+            preguntaActual = 0; puntaje = 0;
+            document.getElementById("total-questions-text").innerText = preguntasDelTest.length;
+            showScreen('screen-quiz'); cargarPregunta();
         }
 
         function cargarPregunta() {
             document.getElementById("feedback-text").innerText = "";
             document.getElementById("next-btn").style.display = "none";
-            const contenedorOpciones = document.getElementById("options-container");
-            contenedorOpciones.innerHTML = "";
-
+            const container = document.getElementById("options-container");
+            container.innerHTML = "";
+            const p = preguntasDelTest[preguntaActual];
             document.getElementById("current-question-text").innerText = preguntaActual + 1;
+            document.getElementById("question-text").innerText = p.pregunta;
 
-            const pregunta = preguntasDelTest[preguntaActual];
-            document.getElementById("question-text").innerText = pregunta.pregunta;
-
-            pregunta.opciones.forEach((opcion, index) => {
-                const boton = document.createElement("button");
-                const letra = String.fromCharCode(65 + index);
-                boton.innerText = letra + ") " + opcion;
-                boton.classList.add("option-btn");
-                boton.onclick = () => verificarRespuesta(index, boton);
-                contenedorOpciones.appendChild(boton);
+            p.opciones.forEach((opt, i) => {
+                const btn = document.createElement("button");
+                btn.innerText = `${String.fromCharCode(65 + i)}) ${opt}`;
+                btn.classList.add("option-btn");
+                btn.onclick = () => {
+                    if(document.getElementById("next-btn").style.display === "block") return;
+                    const btns = container.querySelectorAll("button");
+                    btns.forEach(b => b.style.pointerEvents = "none");
+                    if(i === p.respuestaCorrecta) { btn.classList.add("correct"); puntaje += 10; }
+                    else { btn.classList.add("wrong"); btns[p.respuestaCorrecta].classList.add("correct"); }
+                    document.getElementById("feedback-text").innerText = p.explicacion;
+                    document.getElementById("score-text").innerText = puntaje;
+                    document.getElementById("next-btn").style.display = "block";
+                };
+                container.appendChild(btn);
             });
         }
 
-        function verificarRespuesta(indiceSeleccionado, botonSeleccionado) {
-            const pregunta = preguntasDelTest[preguntaActual];
-            const botones = document.querySelectorAll(".option-btn");
-            botones.forEach(btn => btn.style.pointerEvents = 'none');
-
-            if (indiceSeleccionado === pregunta.respuestaCorrecta) {
-                botonSeleccionado.classList.add("correct");
-                puntaje += 10;
-                document.getElementById("score-text").innerText = puntaje;
-                document.getElementById("feedback-text").innerText = "¡Correcto! " + pregunta.explicacion;
-                document.getElementById("feedback-text").style.color = "#a8e6cf"; 
-            } else {
-                botonSeleccionado.classList.add("wrong");
-                botones[pregunta.respuestaCorrecta].classList.add("correct"); 
-                document.getElementById("feedback-text").innerText = "Incorrecto. " + pregunta.explicacion;
-                document.getElementById("feedback-text").style.color = "#f44336"; 
-            }
-            document.getElementById("next-btn").style.display = "block";
-        }
-
         function siguientePregunta() {
-            document.getElementById("next-btn").style.display = "none";
             preguntaActual++;
-            if (preguntaActual < preguntasDelTest.length) {
-                cargarPregunta();
-            } else {
+            if (preguntaActual < preguntasDelTest.length) cargarPregunta();
+            else {
                 document.getElementById("quiz-content").style.display = "none";
                 document.getElementById("results-content").style.display = "block";
                 document.getElementById("final-score").innerText = puntaje;
                 document.getElementById("max-score").innerText = preguntasDelTest.length * 10;
             }
+        }
+
+        function reintentarTest() {
+            if(lastConfig.tipo === 'ric') iniciarTestAleatorioRIC(lastConfig.cantidad);
+            else if(lastConfig.tipo === 'intro') iniciarTestIntro(lastConfig.cantidad);
+            else iniciarTestPersonalizado();
         }
     </script>
 </body>
