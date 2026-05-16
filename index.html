@@ -12,28 +12,56 @@
         h2 { color: #a8e6cf; font-size: 18px; text-align: center; margin-bottom: 20px; }
         .screen { display: none; }
         .screen.active { display: block; }
+        
+        /* Botones del menú */
         .menu-btn { background-color: #333333; color: #ffffff; border: 1px solid #3e3e42; padding: 15px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; margin-bottom: 15px; transition: 0.2s; font-weight: bold; }
         .menu-btn:hover { background-color: #007acc; border-color: #005f9e; transform: translateX(5px); }
         .btn-disabled { background-color: #1e1e1e; color: #666; cursor: not-allowed; border-style: dashed; }
         .btn-back { background-color: transparent; color: #888; border: 1px solid #888; margin-top: 10px; }
         .btn-back:hover { background-color: #333; color: white; }
+        
+        /* Estilos de Récord en los botones */
+        .btn-record { display: block; font-size: 13px; color: #ffd700; margin-top: 5px; font-weight: normal; }
+
+        /* Cuadrícula Custom */
         .ric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
         .ric-checkbox { display: flex; align-items: center; background: #333; padding: 8px; border-radius: 4px; border: 1px solid #444; cursor: pointer; font-size: 14px; user-select: none; }
         .ric-checkbox input { margin-right: 8px; }
         .input-group { margin-bottom: 20px; text-align: center; background: #333; padding: 15px; border-radius: 6px; border: 1px solid #444;}
         .input-group input { padding: 10px; border-radius: 4px; border: 1px solid #007acc; background: #1e1e1e; color: white; width: 80px; text-align: center; font-size: 18px; font-weight: bold; }
         #max-qty-label { display: block; margin-top: 5px; font-size: 13px; color: #a8e6cf; }
+        
+        /* Quiz */
         .score-board { text-align: center; font-size: 14px; color: #888; margin-bottom: 25px; border-bottom: 1px solid #3e3e42; padding-bottom: 10px; }
-        .question { font-size: 18px; color: #ffffff; margin-bottom: 20px; line-height: 1.4; }
+        .question { font-size: 18px; color: #ffffff; margin-bottom: 15px; line-height: 1.4; }
+        
+        /* Botón de Pistas */
+        .hint-btn { background-color: transparent; color: #f39c12; border: 1px solid #f39c12; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; margin-bottom: 15px; display: none; transition: 0.2s; }
+        .hint-btn:hover { background-color: #f39c12; color: #1e1e1e; }
+        .hint-text { background-color: #2c2c2c; color: #f39c12; padding: 12px; border-radius: 4px; font-size: 14px; margin-bottom: 15px; display: none; border-left: 3px solid #f39c12; font-style: italic; }
+
+        /* Opciones y Feedback */
         .options { display: flex; flex-direction: column; gap: 12px; }
         .option-btn { background-color: #333333; color: #cccccc; border: 1px solid #3e3e42; padding: 15px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 16px; }
         .correct { background-color: #2e7d32 !important; color: white !important; }
         .wrong { background-color: #c62828 !important; color: white !important; }
-        .feedback { margin-top: 20px; font-size: 14px; min-height: 40px; color: #a8e6cf; }
+        .feedback { margin-top: 20px; font-size: 15px; min-height: 40px; color: #cccccc; line-height: 1.5; }
         #next-btn { background-color: #007acc; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 15px; display: none; }
+        
+        /* Pantalla de Errores */
+        .error-card { background-color: #2d2d2d; padding: 15px; border-radius: 6px; margin-bottom: 15px; text-align: left; border-left: 4px solid #c62828; }
+        .err-pregunta { color: white; margin-bottom: 12px; font-size: 16px; }
+        .err-tuya { color: #ff5252; margin-bottom: 5px; font-size: 14px; }
+        .err-correcta { color: #4caf50; margin-bottom: 12px; font-size: 14px; }
+        .err-explicacion { background-color: #1e1e1e; padding: 10px; color: #a8e6cf; font-size: 14px; border-radius: 4px; font-style: italic; }
+
+        /* Marca de agua */
+        .watermark { position: fixed; bottom: 10px; right: 15px; color: #555555; font-size: 12px; font-style: italic; pointer-events: none; user-select: none; z-index: 1000; }
     </style>
 </head>
 <body>
+    <div class="watermark">Desarrollado por Felipe H.</div>
+
     <div class="app-container">
         <div id="screen-main" class="screen active">
             <h1>Entrenador Eléctrico</h1>
@@ -46,17 +74,17 @@
         <div id="screen-intro" class="screen">
             <h1>Introducción</h1>
             <h2>Selecciona la longitud del test</h2>
-            <button class="menu-btn" onclick="iniciarTestIntro(10)">⏱️ Test Corto (10 Preguntas)</button>
-            <button class="menu-btn" onclick="iniciarTestIntro(20)">📝 Test Intermedio (20 Preguntas)</button>
+            <button class="menu-btn" onclick="iniciarTestIntro(10)">⏱️ Test Corto (10 Preguntas) <span id="rec-intro-10" class="btn-record"></span></button>
+            <button class="menu-btn" onclick="iniciarTestIntro(20)">📝 Test Intermedio (20 Preguntas) <span id="rec-intro-20" class="btn-record"></span></button>
             <button class="menu-btn btn-back" onclick="showScreen('screen-main')">← Volver al inicio</button>
         </div>
 
         <div id="screen-ric" class="screen">
             <h1>Normativa RIC</h1>
             <h2>Selecciona la longitud del test</h2>
-            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(10)">⏱️ Test Corto (10 Preguntas)</button>
-            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(20)">📝 Test Intermedio (20 Preguntas)</button>
-            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(30)">🔥 Test Largo (30 Preguntas)</button>
+            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(10)">⏱️ Test Corto (10 Preguntas) <span id="rec-ric-10" class="btn-record"></span></button>
+            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(20)">📝 Test Intermedio (20 Preguntas) <span id="rec-ric-20" class="btn-record"></span></button>
+            <button class="menu-btn" onclick="iniciarTestAleatorioRIC(30)">🔥 Test Largo (30 Preguntas) <span id="rec-ric-30" class="btn-record"></span></button>
             <button class="menu-btn" onclick="showScreen('screen-custom')">⚙️ Test Personalizado (Elegir Pliegos)</button>
             <button class="menu-btn btn-back" onclick="showScreen('screen-main')">← Volver al inicio</button>
         </div>
@@ -77,17 +105,36 @@
             <h1 id="quiz-title">Quiz</h1>
             <div id="quiz-content">
                 <div class="score-board">Pregunta <span id="current-question-text">1</span> de <span id="total-questions-text">X</span> | Puntaje: <span id="score-text">0</span></div>
+                
                 <div class="question" id="question-text"></div>
+                
+                <button id="hint-btn" class="hint-btn" onclick="togglePista()">💡 Ver Pista</button>
+                <div id="hint-text" class="hint-text"></div>
+
                 <div class="options" id="options-container"></div>
                 <div class="feedback" id="feedback-text"></div>
                 <button id="next-btn" onclick="siguientePregunta()">Siguiente</button>
             </div>
+            
             <div id="results-content" style="display: none; text-align: center;">
-                <h2>¡Completado!</h2>
+                <h2>¡Test Completado!</h2>
                 <p>Puntaje final: <br><strong style="font-size: 36px; color: #a8e6cf;" id="final-score">0</strong> de <span id="max-score">0</span></p>
-                <button class="menu-btn" onclick="reintentarTest()">🔄 Reintentar</button>
+                
+                <p id="record-text" style="font-size: 16px; margin-bottom: 25px; font-weight: bold;"></p>
+
+                <button id="btn-ver-errores" class="menu-btn" style="background-color: #c62828; border-color: #ff5252; display: none;" onclick="mostrarErrores()">👀 Revisar mis errores</button>
+
+                <button class="menu-btn" onclick="reintentarTest()">🔄 Reintentar mismo modo</button>
                 <button class="menu-btn btn-back" onclick="showScreen('screen-main')">🏠 Menú Principal</button>
             </div>
+        </div>
+
+        <div id="screen-errores" class="screen">
+            <h1>Repaso de Errores</h1>
+            <h2 style="color: #ff5252;">Lo que necesitas reforzar</h2>
+            <div id="errores-list" style="max-height: 50vh; overflow-y: auto; margin-bottom: 20px; padding-right: 5px;">
+                </div>
+            <button class="menu-btn" onclick="showScreen('screen-quiz')">← Volver a los Resultados</button>
         </div>
     </div>
 
@@ -96,6 +143,7 @@
         let preguntaActual = 0;
         let puntaje = 0;
         let lastConfig = {};
+        let erroresCometidos = []; // Arreglo para memorizar en qué te equivocas
 
         window.onload = () => {
             const grid = document.getElementById('ric-checkboxes');
@@ -103,7 +151,26 @@
                 grid.innerHTML += `<label class="ric-checkbox"><input type="checkbox" class="ric-cb" value="${i}"> RIC ${i}</label>`;
             }
             document.querySelectorAll('.ric-cb').forEach(cb => cb.addEventListener('change', recalcularMaximoPreguntas));
+            actualizarTextosDeRecord(); // Cargar récords en los botones al abrir la web
         };
+
+        // Función que revisa la memoria de tu navegador y actualiza los botones
+        function actualizarTextosDeRecord() {
+            const modos = [
+                { id: 'rec-intro-10', key: 'record_intro_10' },
+                { id: 'rec-intro-20', key: 'record_intro_20' },
+                { id: 'rec-ric-10', key: 'record_ric_10' },
+                { id: 'rec-ric-20', key: 'record_ric_20' },
+                { id: 'rec-ric-30', key: 'record_ric_30' }
+            ];
+            modos.forEach(m => {
+                let pts = localStorage.getItem(m.key);
+                let el = document.getElementById(m.id);
+                if(el) {
+                    el.innerText = pts ? `🏆 Récord: ${pts} pts` : "No jugado";
+                }
+            });
+        }
 
         function recalcularMaximoPreguntas() {
             let seleccionados = Array.from(document.querySelectorAll('.ric-cb:checked')).map(cb => parseInt(cb.value));
@@ -151,24 +218,43 @@
             document.getElementById("quiz-content").style.display = "block";
             document.getElementById("quiz-title").innerText = titulo;
             
+            // Reiniciar estado
+            erroresCometidos = [];
+            preguntaActual = 0; 
+            puntaje = 0;
+
             preguntasDelTest = mezclar([...pool]).slice(0, cant).map(p => {
                 let opcionesLimpias = p.opciones.map(o => o.replace(/^[A-D]\)\s*/, ''));
                 let correctaText = opcionesLimpias[p.respuestaCorrecta];
                 let revueltas = mezclar([...opcionesLimpias]);
-                return { pregunta: p.pregunta, opciones: revueltas, respuestaCorrecta: revueltas.indexOf(correctaText), explicacion: p.explicacion };
+                return { pregunta: p.pregunta, opciones: revueltas, respuestaCorrecta: revueltas.indexOf(correctaText), explicacion: p.explicacion, pista: p.pista };
             });
 
-            preguntaActual = 0; puntaje = 0;
             document.getElementById("total-questions-text").innerText = preguntasDelTest.length;
-            showScreen('screen-quiz'); cargarPregunta();
+            showScreen('screen-quiz'); 
+            cargarPregunta();
         }
 
         function cargarPregunta() {
-            document.getElementById("feedback-text").innerText = "";
+            document.getElementById("feedback-text").innerHTML = "";
             document.getElementById("next-btn").style.display = "none";
+            
+            const p = preguntasDelTest[preguntaActual];
+            const btnPista = document.getElementById("hint-btn");
+            const textPista = document.getElementById("hint-text");
+            
+            textPista.style.display = "none"; 
+            
+            if (p.pista) {
+                btnPista.style.display = "inline-block";
+                textPista.innerText = p.pista;
+            } else {
+                btnPista.style.display = "none";
+            }
+
             const container = document.getElementById("options-container");
             container.innerHTML = "";
-            const p = preguntasDelTest[preguntaActual];
+            
             document.getElementById("current-question-text").innerText = preguntaActual + 1;
             document.getElementById("question-text").innerText = p.pregunta;
 
@@ -176,13 +262,30 @@
                 const btn = document.createElement("button");
                 btn.innerText = `${String.fromCharCode(65 + i)}) ${opt}`;
                 btn.classList.add("option-btn");
+                
                 btn.onclick = () => {
                     if(document.getElementById("next-btn").style.display === "block") return;
+                    
                     const btns = container.querySelectorAll("button");
                     btns.forEach(b => b.style.pointerEvents = "none");
-                    if(i === p.respuestaCorrecta) { btn.classList.add("correct"); puntaje += 10; }
-                    else { btn.classList.add("wrong"); btns[p.respuestaCorrecta].classList.add("correct"); }
-                    document.getElementById("feedback-text").innerText = p.explicacion;
+                    
+                    if(i === p.respuestaCorrecta) { 
+                        btn.classList.add("correct"); 
+                        puntaje += 10; 
+                        document.getElementById("feedback-text").innerHTML = `<strong style="color:#a8e6cf;">¡Correcto!</strong><br>${p.explicacion}`;
+                    } else { 
+                        btn.classList.add("wrong"); 
+                        btns[p.respuestaCorrecta].classList.add("correct"); 
+                        document.getElementById("feedback-text").innerHTML = `<strong style="color:#ff5252;">Incorrecto.</strong><br>${p.explicacion}`;
+                        
+                        // Memorizar el error
+                        erroresCometidos.push({
+                            pregunta: p.pregunta,
+                            tuRespuesta: opt,
+                            respuestaCorrecta: p.opciones[p.respuestaCorrecta],
+                            explicacion: p.explicacion
+                        });
+                    }
                     document.getElementById("score-text").innerText = puntaje;
                     document.getElementById("next-btn").style.display = "block";
                 };
@@ -190,15 +293,68 @@
             });
         }
 
+        function togglePista() {
+            const textPista = document.getElementById("hint-text");
+            textPista.style.display = textPista.style.display === "none" ? "block" : "none";
+        }
+
         function siguientePregunta() {
             preguntaActual++;
-            if (preguntaActual < preguntasDelTest.length) cargarPregunta();
-            else {
+            if (preguntaActual < preguntasDelTest.length) {
+                cargarPregunta();
+            } else {
+                // TEST TERMINADO - Procesar Resultados
                 document.getElementById("quiz-content").style.display = "none";
                 document.getElementById("results-content").style.display = "block";
                 document.getElementById("final-score").innerText = puntaje;
                 document.getElementById("max-score").innerText = preguntasDelTest.length * 10;
+
+                // Lógica de Récords
+                let recordKey = 'record_' + lastConfig.tipo + '_' + lastConfig.cantidad;
+                let recordActual = parseInt(localStorage.getItem(recordKey)) || 0;
+                let esNuevoRecord = false;
+
+                if (puntaje > recordActual) {
+                    localStorage.setItem(recordKey, puntaje);
+                    recordActual = puntaje;
+                    esNuevoRecord = true;
+                }
+
+                let txtRecord = document.getElementById("record-text");
+                if(esNuevoRecord) {
+                    txtRecord.innerText = `¡NUEVO RÉCORD! 🏆 ${recordActual} pts`;
+                    txtRecord.style.color = "#ffd700"; // dorado
+                } else {
+                    txtRecord.innerText = `🏆 Mejor Récord Histórico: ${recordActual} pts`;
+                    txtRecord.style.color = "#888"; // gris
+                }
+
+                actualizarTextosDeRecord(); // Refrescar los botones del menú
+
+                // Mostrar botón de revisión si hubo errores
+                if (erroresCometidos.length > 0) {
+                    document.getElementById("btn-ver-errores").style.display = "inline-block";
+                } else {
+                    document.getElementById("btn-ver-errores").style.display = "none";
+                }
             }
+        }
+
+        // Función para renderizar la pantalla de revisión de errores
+        function mostrarErrores() {
+            let container = document.getElementById("errores-list");
+            container.innerHTML = "";
+            erroresCometidos.forEach((err, index) => {
+                container.innerHTML += `
+                    <div class="error-card">
+                        <div class="err-pregunta"><strong>Problema:</strong> ${err.pregunta}</div>
+                        <div class="err-tuya">❌ Marcaste: ${err.tuRespuesta}</div>
+                        <div class="err-correcta">✅ Era correcta: ${err.respuestaCorrecta}</div>
+                        <div class="err-explicacion">💡 Fundamento: ${err.explicacion}</div>
+                    </div>
+                `;
+            });
+            showScreen('screen-errores');
         }
 
         function reintentarTest() {
