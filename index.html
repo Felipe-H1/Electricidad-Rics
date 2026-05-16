@@ -20,7 +20,6 @@
         .btn-back { background-color: transparent; color: #888; border: 1px solid #888; margin-top: 10px; }
         .btn-back:hover { background-color: #333; color: white; }
         
-        /* Estilos de Récord en los botones */
         .btn-record { display: block; font-size: 13px; color: #ffd700; margin-top: 5px; font-weight: normal; }
 
         /* Cuadrícula Custom */
@@ -48,12 +47,14 @@
         .feedback { margin-top: 20px; font-size: 15px; min-height: 40px; color: #cccccc; line-height: 1.5; }
         #next-btn { background-color: #007acc; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 15px; display: none; }
         
-        /* Pantalla de Errores */
+        /* Pantallas de repaso y leaderboard */
         .error-card { background-color: #2d2d2d; padding: 15px; border-radius: 6px; margin-bottom: 15px; text-align: left; border-left: 4px solid #c62828; }
         .err-pregunta { color: white; margin-bottom: 12px; font-size: 16px; }
         .err-tuya { color: #ff5252; margin-bottom: 5px; font-size: 14px; }
         .err-correcta { color: #4caf50; margin-bottom: 12px; font-size: 14px; }
         .err-explicacion { background-color: #1e1e1e; padding: 10px; color: #a8e6cf; font-size: 14px; border-radius: 4px; font-style: italic; }
+
+        .leaderboard-select { padding: 10px; background: #1e1e1e; color: white; border: 1px solid #007acc; border-radius: 4px; width: 100%; margin-bottom: 20px; font-size: 16px; font-weight: bold; text-align: center; }
 
         /* Marca de agua */
         .watermark { position: fixed; bottom: 10px; right: 15px; color: #555555; font-size: 12px; font-style: italic; pointer-events: none; user-select: none; z-index: 1000; }
@@ -69,6 +70,7 @@
             <button class="menu-btn" onclick="showScreen('screen-intro')">⚡ Introducción a la Electricidad</button>
             <button class="menu-btn" onclick="showScreen('screen-ric')">📚 Estudiar Normativa RIC (1 al 19)</button>
             <button class="menu-btn btn-disabled" onclick="alert('Pronto módulo de cálculos.')">📐 Estudiar Cálculos Matemáticos (Pronto)</button>
+            <button class="menu-btn" style="background-color: #2c3e50; border-color: #34495e;" onclick="verLeaderboard()">🏆 Ver Top 10</button>
         </div>
 
         <div id="screen-intro" class="screen">
@@ -120,10 +122,15 @@
                 <h2>¡Test Completado!</h2>
                 <p>Puntaje final: <br><strong style="font-size: 36px; color: #a8e6cf;" id="final-score">0</strong> de <span id="max-score">0</span></p>
                 
-                <p id="record-text" style="font-size: 16px; margin-bottom: 25px; font-weight: bold;"></p>
+                <p id="record-text" style="font-size: 16px; margin-bottom: 20px; font-weight: bold;"></p>
+
+                <div id="subir-puntaje-box" style="margin-bottom: 25px; background: #333; padding: 15px; border-radius: 6px; border: 1px solid #007acc;">
+                    <p style="margin: 0 0 10px 0; color: #ffd700; font-weight: bold;">🏆 ¡Sube tu récord al Top 10!</p>
+                    <input type="text" id="player-name" placeholder="Tu Nombre o Apodo" style="padding: 10px; border-radius: 4px; border: 1px solid #007acc; background: #1e1e1e; color: white; text-align: center; margin-bottom: 12px; width: 80%; font-size: 15px;">
+                    <button class="menu-btn" style="background-color: #007acc; margin-bottom: 0; padding: 10px;" onclick="subirPuntajeFirebase()">🚀 Publicar en el Top 10</button>
+                </div>
 
                 <button id="btn-ver-errores" class="menu-btn" style="background-color: #c62828; border-color: #ff5252; display: none;" onclick="mostrarErrores()">👀 Revisar mis errores</button>
-
                 <button class="menu-btn" onclick="reintentarTest()">🔄 Reintentar mismo modo</button>
                 <button class="menu-btn btn-back" onclick="showScreen('screen-main')">🏠 Menú Principal</button>
             </div>
@@ -132,18 +139,47 @@
         <div id="screen-errores" class="screen">
             <h1>Repaso de Errores</h1>
             <h2 style="color: #ff5252;">Lo que necesitas reforzar</h2>
-            <div id="errores-list" style="max-height: 50vh; overflow-y: auto; margin-bottom: 20px; padding-right: 5px;">
-                </div>
+            <div id="errores-list" style="max-height: 50vh; overflow-y: auto; margin-bottom: 20px; padding-right: 5px;"></div>
             <button class="menu-btn" onclick="showScreen('screen-quiz')">← Volver a los Resultados</button>
+        </div>
+
+        <div id="screen-leaderboard" class="screen">
+            <h1>🏆 Top 10</h1>
+            <select id="leaderboard-select" class="leaderboard-select" onchange="cambiarModoLeaderboard()">
+                <option value="intro_10">⚡ Intro - 10 Preguntas</option>
+                <option value="intro_20">⚡ Intro - 20 Preguntas</option>
+                <option value="ric_10">📚 RIC - 10 Preguntas</option>
+                <option value="ric_20">📚 RIC - 20 Preguntas</option>
+                <option value="ric_30">📚 RIC - 30 Preguntas</option>
+                <option value="custom">⚙️ RIC Personalizado</option>
+            </select>
+            <div id="leaderboard-list" style="max-height: 45vh; overflow-y: auto; margin-bottom: 20px; background: #1e1e1e; padding: 15px; border-radius: 6px; border: 1px solid #333;"></div>
+            <button class="menu-btn btn-back" onclick="showScreen('screen-main')">🏠 Volver al Inicio</button>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPJlUjSAHURvO_llfpYGtWkRlfEo63JxY",
+            authDomain: "ric-s-21.firebaseapp.com",
+            projectId: "ric-s-21",
+            storageBucket: "ric-s-21.firebasestorage.app",
+            messagingSenderId: "439182487068",
+            appId: "1:439182487068:web:f9370668dc6d7f2590b9d9",
+            measurementId: "G-B0MZ0S1C62"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         let preguntasDelTest = [];
         let preguntaActual = 0;
         let puntaje = 0;
         let lastConfig = {};
-        let erroresCometidos = []; // Arreglo para memorizar en qué te equivocas
+        let erroresCometidos = [];
 
         window.onload = () => {
             const grid = document.getElementById('ric-checkboxes');
@@ -151,10 +187,9 @@
                 grid.innerHTML += `<label class="ric-checkbox"><input type="checkbox" class="ric-cb" value="${i}"> RIC ${i}</label>`;
             }
             document.querySelectorAll('.ric-cb').forEach(cb => cb.addEventListener('change', recalcularMaximoPreguntas));
-            actualizarTextosDeRecord(); // Cargar récords en los botones al abrir la web
+            actualizarTextosDeRecord();
         };
 
-        // Función que revisa la memoria de tu navegador y actualiza los botones
         function actualizarTextosDeRecord() {
             const modos = [
                 { id: 'rec-intro-10', key: 'record_intro_10' },
@@ -166,9 +201,7 @@
             modos.forEach(m => {
                 let pts = localStorage.getItem(m.key);
                 let el = document.getElementById(m.id);
-                if(el) {
-                    el.innerText = pts ? `🏆 Récord: ${pts} pts` : "No jugado";
-                }
+                if(el) el.innerText = pts ? `🏆 Récord: ${pts} pts` : "No jugado";
             });
         }
 
@@ -217,11 +250,11 @@
             document.getElementById("results-content").style.display = "none";
             document.getElementById("quiz-content").style.display = "block";
             document.getElementById("quiz-title").innerText = titulo;
+            document.getElementById("subir-puntaje-box").style.display = "block";
+            document.getElementById("player-name").value = "";
             
-            // Reiniciar estado
             erroresCometidos = [];
-            preguntaActual = 0; 
-            puntaje = 0;
+            preguntaActual = 0; puntaje = 0;
 
             preguntasDelTest = mezclar([...pool]).slice(0, cant).map(p => {
                 let opcionesLimpias = p.opciones.map(o => o.replace(/^[A-D]\)\s*/, ''));
@@ -231,8 +264,7 @@
             });
 
             document.getElementById("total-questions-text").innerText = preguntasDelTest.length;
-            showScreen('screen-quiz'); 
-            cargarPregunta();
+            showScreen('screen-quiz'); cargarPregunta();
         }
 
         function cargarPregunta() {
@@ -242,7 +274,6 @@
             const p = preguntasDelTest[preguntaActual];
             const btnPista = document.getElementById("hint-btn");
             const textPista = document.getElementById("hint-text");
-            
             textPista.style.display = "none"; 
             
             if (p.pista) {
@@ -254,7 +285,6 @@
 
             const container = document.getElementById("options-container");
             container.innerHTML = "";
-            
             document.getElementById("current-question-text").innerText = preguntaActual + 1;
             document.getElementById("question-text").innerText = p.pregunta;
 
@@ -262,29 +292,17 @@
                 const btn = document.createElement("button");
                 btn.innerText = `${String.fromCharCode(65 + i)}) ${opt}`;
                 btn.classList.add("option-btn");
-                
                 btn.onclick = () => {
                     if(document.getElementById("next-btn").style.display === "block") return;
-                    
                     const btns = container.querySelectorAll("button");
                     btns.forEach(b => b.style.pointerEvents = "none");
-                    
                     if(i === p.respuestaCorrecta) { 
-                        btn.classList.add("correct"); 
-                        puntaje += 10; 
+                        btn.classList.add("correct"); puntaje += 10; 
                         document.getElementById("feedback-text").innerHTML = `<strong style="color:#a8e6cf;">¡Correcto!</strong><br>${p.explicacion}`;
                     } else { 
-                        btn.classList.add("wrong"); 
-                        btns[p.respuestaCorrecta].classList.add("correct"); 
+                        btn.classList.add("wrong"); btns[p.respuestaCorrecta].classList.add("correct"); 
                         document.getElementById("feedback-text").innerHTML = `<strong style="color:#ff5252;">Incorrecto.</strong><br>${p.explicacion}`;
-                        
-                        // Memorizar el error
-                        erroresCometidos.push({
-                            pregunta: p.pregunta,
-                            tuRespuesta: opt,
-                            respuestaCorrecta: p.opciones[p.respuestaCorrecta],
-                            explicacion: p.explicacion
-                        });
+                        erroresCometidos.push({ pregunta: p.pregunta, tuRespuesta: opt, respuestaCorrecta: p.opciones[p.respuestaCorrecta], explicacion: p.explicacion });
                     }
                     document.getElementById("score-text").innerText = puntaje;
                     document.getElementById("next-btn").style.display = "block";
@@ -300,16 +318,13 @@
 
         function siguientePregunta() {
             preguntaActual++;
-            if (preguntaActual < preguntasDelTest.length) {
-                cargarPregunta();
-            } else {
-                // TEST TERMINADO - Procesar Resultados
+            if (preguntaActual < preguntasDelTest.length) cargarPregunta();
+            else {
                 document.getElementById("quiz-content").style.display = "none";
                 document.getElementById("results-content").style.display = "block";
                 document.getElementById("final-score").innerText = puntaje;
                 document.getElementById("max-score").innerText = preguntasDelTest.length * 10;
 
-                // Lógica de Récords
                 let recordKey = 'record_' + lastConfig.tipo + '_' + lastConfig.cantidad;
                 let recordActual = parseInt(localStorage.getItem(recordKey)) || 0;
                 let esNuevoRecord = false;
@@ -322,37 +337,23 @@
 
                 let txtRecord = document.getElementById("record-text");
                 if(esNuevoRecord) {
-                    txtRecord.innerText = `¡NUEVO RÉCORD! 🏆 ${recordActual} pts`;
-                    txtRecord.style.color = "#ffd700"; // dorado
+                    txtRecord.innerText = `¡NUEVO RÉCORD LOCAL! 🏆 ${recordActual} pts`;
+                    txtRecord.style.color = "#ffd700";
                 } else {
-                    txtRecord.innerText = `🏆 Mejor Récord Histórico: ${recordActual} pts`;
-                    txtRecord.style.color = "#888"; // gris
+                    txtRecord.innerText = `🏆 Mejor Récord Local: ${recordActual} pts`;
+                    txtRecord.style.color = "#888";
                 }
 
-                actualizarTextosDeRecord(); // Refrescar los botones del menú
-
-                // Mostrar botón de revisión si hubo errores
-                if (erroresCometidos.length > 0) {
-                    document.getElementById("btn-ver-errores").style.display = "inline-block";
-                } else {
-                    document.getElementById("btn-ver-errores").style.display = "none";
-                }
+                actualizarTextosDeRecord();
+                document.getElementById("btn-ver-errores").style.display = erroresCometidos.length > 0 ? "inline-block" : "none";
             }
         }
 
-        // Función para renderizar la pantalla de revisión de errores
         function mostrarErrores() {
             let container = document.getElementById("errores-list");
             container.innerHTML = "";
-            erroresCometidos.forEach((err, index) => {
-                container.innerHTML += `
-                    <div class="error-card">
-                        <div class="err-pregunta"><strong>Problema:</strong> ${err.pregunta}</div>
-                        <div class="err-tuya">❌ Marcaste: ${err.tuRespuesta}</div>
-                        <div class="err-correcta">✅ Era correcta: ${err.respuestaCorrecta}</div>
-                        <div class="err-explicacion">💡 Fundamento: ${err.explicacion}</div>
-                    </div>
-                `;
+            erroresCometidos.forEach(err => {
+                container.innerHTML += `<div class="error-card"><div class="err-pregunta"><strong>Problema:</strong> ${err.pregunta}</div><div class="err-tuya">❌ Marcaste: ${err.tuRespuesta}</div><div class="err-correcta">✅ Era correcta: ${err.respuestaCorrecta}</div><div class="err-explicacion">💡 Fundamento: ${err.explicacion}</div></div>`;
             });
             showScreen('screen-errores');
         }
@@ -362,6 +363,105 @@
             else if(lastConfig.tipo === 'intro') iniciarTestIntro(lastConfig.cantidad);
             else iniciarTestPersonalizado();
         }
+
+        // --- FUNCIONES CLAVE DE FIREBASE EN LA NUBE ---
+        async function subirPuntajeFirebase() {
+            const nameInput = document.getElementById("player-name");
+            const name = nameInput.value.trim();
+            if(!name) { alert("¡Ingresa tu nombre o apodo antes de enviar!"); return; }
+            
+            let modoID = lastConfig.tipo;
+            if(lastConfig.cantidad) modoID += "_" + lastConfig.cantidad;
+
+            try {
+                await addDoc(collection(db, "puntajes"), {
+                    nombre: name,
+                    puntaje: puntaje,
+                    modo: modoID,
+                    fecha: new Date().toISOString()
+                });
+                alert("¡Puntaje subido con éxito! 🚀");
+                document.getElementById("subir-puntaje-box").style.display = "none";
+                verLeaderboard(modoID);
+            } catch (error) {
+                console.error(error);
+                alert("Error al conectar con la nube. Asegúrate de estar en Modo de Prueba.");
+            }
+        }
+
+        async function verLeaderboard(modoDefecto) {
+            let modoFiltrar = modoDefecto || "ric_10";
+            document.getElementById("leaderboard-select").value = modoFiltrar;
+            showScreen("screen-leaderboard");
+            await cargarDatosLeaderboard(modoFiltrar);
+        }
+
+        async function cambiarModoLeaderboard() {
+            let col = document.getElementById("leaderboard-select").value;
+            await cargarDatosLeaderboard(col);
+        }
+
+        async function cargarDatosLeaderboard(modo) {
+            const lista = document.getElementById("leaderboard-list");
+            lista.innerHTML = "<p style='text-align:center; color:#f39c12;'>Cargando posiciones de la nube...</p>";
+            
+            try {
+                const q = query(collection(db, "puntajes"), where("modo", "==", modo));
+                const querySnapshot = await getDocs(q);
+                lista.innerHTML = "";
+                
+                let registros = [];
+                querySnapshot.forEach(doc => registros.push(doc.data()));
+                
+                registrationsSort(registros);
+                
+                if(registros.length === 0) {
+                    lista.innerHTML = "<p style='text-align:center; color:#888;'>Aún no hay registros en este modo. ¡Sé el primero!</p>";
+                    return;
+                }
+
+                let html = `<table style="width:100%; border-collapse: collapse; text-align: left;">
+                    <tr style="border-bottom: 2px solid #007acc; color: #ffd700;">
+                        <th style="padding: 8px;">Pos</th>
+                        <th style="padding: 8px;">Nombre</th>
+                        <th style="padding: 8px;">Puntaje</th>
+                    </tr>`;
+                
+                let top10 = registros.slice(0, 10);
+                top10.forEach((data, index) => {
+                    let pos = index + 1;
+                    let colorPos = pos === 1 ? '#ffd700' : pos === 2 ? '#c0c0c0' : pos === 3 ? '#cd7f32' : '#fff';
+                    html += `
+                    <tr style="border-bottom: 1px solid #333;">
+                        <td style="padding: 8px; font-weight: bold; color: ${colorPos}">${pos}°</td>
+                        <td style="padding: 8px; color:white;">${data.nombre}</td>
+                        <td style="padding: 8px; font-weight: bold; color: #a8e6cf;">${data.puntaje} pts</td>
+                    </tr>`;
+                });
+                html += "</table>";
+                lista.innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                lista.innerHTML = "<p style='text-align:center; color:#ff5252;'>Error al leer la base de datos.</p>";
+            }
+        }
+
+        function registrationsSort(arr) {
+            return arr.sort((a, b) => b.puntaje - a.puntaje);
+        }
+
+        window.showScreen = showScreen;
+        window.recalcularMaximoPreguntas = recalcularMaximoPreguntas;
+        window.iniciarTestAleatorioRIC = iniciarTestAleatorioRIC;
+        window.iniciarTestIntro = iniciarTestIntro;
+        window.iniciarTestPersonalizado = iniciarTestPersonalizado;
+        window.togglePista = togglePista;
+        window.siguientePregunta = siguientePregunta;
+        window.mostrarErrores = mostrarErrores;
+        window.reintentarTest = reintentarTest;
+        window.subirPuntajeFirebase = subirPuntajeFirebase;
+        window.verLeaderboard = verLeaderboard;
+        window.cambiarModoLeaderboard = cambiarModoLeaderboard;
     </script>
 </body>
 </html>
